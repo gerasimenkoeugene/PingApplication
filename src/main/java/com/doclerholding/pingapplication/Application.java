@@ -3,12 +3,11 @@ package com.doclerholding.pingapplication;
 import com.doclerholding.pingapplication.config.ApplicationConfig;
 import com.doclerholding.pingapplication.factory.TaskFactory;
 
-import java.io.IOException;
 import java.util.Timer;
 
 public class Application {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         Timer timer = new Timer("Timer");
 

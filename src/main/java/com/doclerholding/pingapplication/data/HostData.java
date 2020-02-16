@@ -2,28 +2,31 @@ package com.doclerholding.pingapplication.data;
 
 import com.doclerholding.pingapplication.domain.HostStatus;
 import com.doclerholding.pingapplication.service.ResourceFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 public class HostData {
 
-    private static Map<String, HostStatus> hostsStatuses = new HashMap<>();
+    private static final Logger LOG = LoggerFactory.getLogger(HostData.class);
+
+    private static Map<String, HostStatus> hostsStatuses;
 
     static {
         try {
-            hostsStatuses = new ResourceFileReader().readFile("hosts.txt")
+            hostsStatuses = ResourceFileReader.INSTANCE.readFile("hosts.txt")
                 .stream().map(host -> {
-                    HostStatus commandExecutionResult =  new HostStatus();
-                    commandExecutionResult.setHost(host);
-                    return commandExecutionResult;
-                }).collect(Collectors.toMap(HostStatus::getHost, commandExecutionResult -> commandExecutionResult));
+                    HostStatus hostStatus =  new HostStatus();
+                    hostStatus.setHost(host);
+                    return hostStatus;
+                }).collect(Collectors.toMap(HostStatus::getHost, status -> status));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error while loading data ", e);
+            System.exit(0);
         }
     }
 
@@ -35,7 +38,13 @@ public class HostData {
         return hostsStatuses.keySet();
     }
 
-    public static Collection<HostStatus> getHostsStatuses() {
-        return hostsStatuses.values();
+    public static void addHostStatusData(String host) {
+        HostStatus hostStatus = new HostStatus();
+        hostStatus.setHost(host);
+        hostsStatuses.put(host, hostStatus);
+    }
+
+    public static void removeHostStatusData(String host) {
+        hostsStatuses.remove(host);
     }
 }

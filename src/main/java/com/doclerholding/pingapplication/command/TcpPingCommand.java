@@ -1,6 +1,5 @@
 package com.doclerholding.pingapplication.command;
 
-
 import com.doclerholding.pingapplication.config.ApplicationConfig;
 import com.doclerholding.pingapplication.data.HostData;
 import com.doclerholding.pingapplication.domain.HostStatus;
@@ -33,8 +32,7 @@ public class TcpPingCommand implements Command {
             long elapsedTime = System.currentTimeMillis() - startTime;
 
             int statusCode = response.statusCode();
-            Boolean isError = statusCode / 100 == 4
-                || statusCode / 100 == 5 ? true : false;
+            Boolean isError = statusCode / 100 == 4 || statusCode / 100 == 5;
             StringBuilder status = new StringBuilder();
             status.append("Request time: ")
                 .append(elapsedTime)
@@ -46,11 +44,6 @@ public class TcpPingCommand implements Command {
         } catch (Exception e) {
             updateHostTcpStatus(host, String.join(" ", "Error", e.getMessage()), true);
         }
-    }
-
-
-    public static void main(String[] args) {
-        new TcpPingCommand().execute("jasmin.com");
     }
 
 
